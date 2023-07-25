@@ -1,105 +1,93 @@
 #include "sort.h"
 
 /**
- * forward_swap - the Function to swap the values and sort them for
- * the forward pass.
- * @list: the head of the linked list.
- * @end: the pointer to the tail of the list
- * @start: the pointer to iterate back and forth the list.
- * Return: nothing
+ * swap_nodes - swaps two nodes
+ * @node1: the node to swap
+ * @node2: the node to swap
+ * @head: the pointer to head node
+ * Return: void
  */
-void forward_swap(listint_t **list, listint_t **end, listint_t **start)
-{
-	listint_t *temp;
 
-	temp = (*start)->next;
-	if ((*start)->prev != NULL)
-		(*start)->prev->next = temp;
-	else
-		*list = temp;
-	temp->prev = (*start)->prev;
-	(*start)->next = temp->next;
-	if (temp->next != NULL)
-		temp->next->prev = *start;
-	else
-		*end = *start;
-	(*start)->prev = temp;
-	temp->next = *start;
-	*start = temp;
+void swap_nodes(listint_t *node1, listint_t *node2, listint_t **head)
+{
+	listint_t *tmp = node1->prev;
+
+	if (tmp != NULL)
+		tmp->next = node2;
+	node2->prev = tmp;
+	node1->prev = node2;
+	node1->next = node2->next;
+	node2->next = node1;
+	if (node1->next != NULL)
+		node1->next->prev = node1;
+	if (node2->prev == NULL)
+		*head = node2;
 }
 
 /**
- * backward_swap - Function to swap values and sort them for the
- * backward pass.
- * @list: the head to the linked list.
- * @end: the pointer to the tail of the list.
- * @start: the pointer to iterate back and forth the list.
- * Return: nothing
- */
-void backward_swap(listint_t **list, listint_t **end, listint_t **start)
-{
-	listint_t *temp;
+  * len_list - computes lenght of linked list
+  * @list: head node of list
+  * Return: lenght of the list
+  */
 
-	temp = (*start)->prev;
-	if ((*start)->next != NULL)
-		(*start)->next->prev = temp;
-	else
-		*end = temp;
-	temp->next = (*start)->next;
-	(*start)->prev = temp->prev;
-	if (temp->prev != NULL)
-		temp->prev->next = *start;
-	else
-		*list = *start;
-	(*start)->next = temp;
-	temp->prev = *start;
-	*start = temp;
+int len_list(listint_t *list)
+{
+	int res = 0;
+
+	while (list)
+	{
+		res++;
+		list = list->next;
+	}
+	return (res);
 }
 
 /**
- * cocktail_sort_list - Function that sorts a doubly linked list
- * of integers in ascending order using the Cocktail shaker sort
- * algorithm.
- * @list: the list of integers.
- * Return: nothing
+ * cocktail_sort_list - cocktail sorting algo
+ * @list: pointer to list to sort
+ * Return: void
  */
+
 void cocktail_sort_list(listint_t **list)
 {
-	listint_t *start, *end;
-	int sort = 1;
+	int start = 0, end, flag = 1, counter = 0;
+	listint_t *tmp;
 
-	if (!*list || !list || !(*list)->next)
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
-
-	for (end = *list; end->next != NULL;)
-		end = end->next;
-
-	while (sort == 1)
+	tmp = *list;
+	end = len_list(*list);
+	while (flag)
 	{
-		sort = 0;
-		start = *list;
-
-		while (start != end)
+		flag = 0;
+		while (counter < end - 1)
 		{
-			if (start->k > start->next->k)
+			if (tmp->n > tmp->next->n)
 			{
-				forward_swap(list, &end, &start);
-				print_list((const listint_t *)*list);
-				sort = 1;
+				flag = 1;
+				swap_nodes(tmp, tmp->next, list);
+				print_list(*list);
 			}
-			start = start->next;
+			else
+				tmp = tmp->next;
+			counter++;
 		}
-
-		start = start->prev;
-		while (start != *list)
+		end--;
+		if (flag == 0)
+			break;
+		flag = 0;
+		while (counter > start)
 		{
-			if (start->k < start->prev->k)
+			if (tmp->n < tmp->prev->n)
 			{
-				backward_swap(list, &end, &start);
-				print_list((const listint_t *)*list);
-				sort = 1;
+				flag = 1;
+				swap_nodes(tmp->prev, tmp, list);
+				print_list(*list);
 			}
-			start = start->prev;
+			else
+				tmp = tmp->prev;
+			counter--;
 		}
+		start++;
 	}
 }
