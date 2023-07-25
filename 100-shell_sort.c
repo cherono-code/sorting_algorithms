@@ -1,40 +1,43 @@
 #include "sort.h"
 
 /**
- * shell_sort - the sort using knuth shell formula
- * @array: the list of interger
- * @size: the size of array
- * Return:- Always 0
+ * shell_sort - the function that sorts an array of integers in
+ * ascending order using the Shell sort algorithm, using the
+ * knuth sequence.
+ * @array: the list of integers
+ * @size: the length of the array.
+ * Return: nothing
  */
 
 void shell_sort(int *array, size_t size)
 {
-	size_t j, gap, n = 0, k = 0;
-	int insert;
+	size_t interval, inner, outer;
+	int tempp;
 
-	if (!array || size == 0)
+	if (!array || size < 2)
 		return;
 
-	while (n < size / 3)
-		n = n * 3 + 1;
-
-	while (n > 0)
+	interval = 1;
+	while (interval < size / 3)
 	{
+		interval = interval * 3 + 1;
+	}
 
-		for (gap = n; gap < size; gap++)
+	while (interval > 0)
+	{
+		for (outer = interval; outer < size; outer++)
 		{
-			insert = array[gap];
-			j = gap;
+			tempp = array[outer];
+			inner = outer;
 
-			while (j > n - 1 && array[j - n] >= insert)
+			while (inner > interval - 1 && array[inner - interval] >= tempp)
 			{
-				array[j] = array[j - n];
-				j = j - n;
+				array[inner] = array[inner - interval];
+				inner = inner - interval;
 			}
-			array[j] = insert;
+			array[inner] = tempp;
 		}
-		n = (n - 1) / 3;
+		interval = (interval - 1) / 3;
 		print_array(array, size);
-		k++;
 	}
 }
