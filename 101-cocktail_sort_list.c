@@ -1,7 +1,7 @@
 #include "sort.h"
 
 /**
- * forward_swap - Function to swap the values and sort them for
+ * forward_swap - the Function to swap the values and sort them for
  * the forward pass.
  * @list: the head of the linked list.
  * @end: the pointer to the tail of the list
@@ -10,22 +10,22 @@
  */
 void forward_swap(listint_t **list, listint_t **end, listint_t **start)
 {
-	listint_t *tempp;
+	listint_t *temp;
 
-	tempp = (*start)->next;
+	temp = (*start)->next;
 	if ((*start)->prev != NULL)
-		(*start)->prev->next = tempp;
+		(*start)->prev->next = temp;
 	else
-		*list = tempp;
-	tempp->prev = (*start)->prev;
-	(*start)->next = tempp->next;
-	if (tempp->next != NULL)
-		tempp->next->prev = *start;
+		*list = temp;
+	temp->prev = (*start)->prev;
+	(*start)->next = temp->next;
+	if (temp->next != NULL)
+		temp->next->prev = *start;
 	else
 		*end = *start;
-	(*start)->prev = tempp;
-	tempp->next = *start;
-	*start = tempp;
+	(*start)->prev = temp;
+	temp->next = *start;
+	*start = temp;
 }
 
 /**
@@ -40,20 +40,20 @@ void backward_swap(listint_t **list, listint_t **end, listint_t **start)
 {
 	listint_t *temp;
 
-	tempp = (*start)->prev;
+	temp = (*start)->prev;
 	if ((*start)->next != NULL)
-		(*start)->next->prev = tempp;
+		(*start)->next->prev = temp;
 	else
-		*end = tempp;
-	tempp->next = (*start)->next;
-	(*start)->prev = tempp->prev;
-	if (tempp->prev != NULL)
-		tempp->prev->next = *start;
+		*end = temp;
+	temp->next = (*start)->next;
+	(*start)->prev = temp->prev;
+	if (temp->prev != NULL)
+		temp->prev->next = *start;
 	else
 		*list = *start;
-	(*start)->next = tempp;
-	tempp->prev = *start;
-	*start = tempp;
+	(*start)->next = temp;
+	temp->prev = *start;
+	*start = temp;
 }
 
 /**
@@ -81,7 +81,7 @@ void cocktail_sort_list(listint_t **list)
 
 		while (start != end)
 		{
-			if (start->n > start->next->n)
+			if (start->k > start->next->k)
 			{
 				forward_swap(list, &end, &start);
 				print_list((const listint_t *)*list);
@@ -93,7 +93,7 @@ void cocktail_sort_list(listint_t **list)
 		start = start->prev;
 		while (start != *list)
 		{
-			if (start->n < start->prev->n)
+			if (start->k < start->prev->k)
 			{
 				backward_swap(list, &end, &start);
 				print_list((const listint_t *)*list);
